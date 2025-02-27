@@ -1,6 +1,7 @@
+import React from 'react';
 function App() {
   return (
-    <div className="App" id="sub_root">
+    <div className="App">
       Simple React
     </div>
   );
