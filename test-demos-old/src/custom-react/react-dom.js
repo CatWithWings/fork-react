@@ -1,29 +1,5 @@
 import { REACT_ELEMENT } from './utils';
 
-function render(VNode, containerDom) {
-  // 1. 虚拟DOM转化为真实DOM
-  // 2. 真实DOM挂载到containerDom
-  mount(VNode, containerDom);
-}
-
-// 挂载
-function mount(VNode, containerDom) {
-  let newDOM = createDOM(VNode);
-  newDOM && containerDom.appendChild(newDOM);
-}
-
-// 挂载
-function mountArray(children, parent) {
-  if (!Array.isArray(children)) return;
-  children.forEach(child => {
-    if (typeof child === 'string') {
-      parent.appendChild(document.createTextNode(child));
-    } else {
-      mount(child, parent);
-    }
-  });
-}
-
 // 设置属性值
 function setPropsForDOM(dom, VNodeProps = {}) {
   if (!dom) return;
@@ -45,12 +21,26 @@ function setPropsForDOM(dom, VNodeProps = {}) {
   }
 }
 
+// 处理函数型组件
+function getDomByFunctionComponent(VNode) {
+  const { type, props } = VNode;
+  const renderVNode = type(props);
+  if(!renderVNode) return null;
+  console.log('renderVNode --->', renderVNode);
+  return createDOM(renderVNode);
+}
+
 // 创建真实DOM
 function createDOM(VNode) {
-  const { $$typeof, type, props } = VNode;
+  const { type, props } = VNode;
   // 创建元素
   let dom;
-  if (type && $$typeof === REACT_ELEMENT) {
+
+  // 处理函数型组件
+  if(VNode.$$typeof === REACT_ELEMENT && typeof type === 'function') {
+    return getDomByFunctionComponent(VNode);
+  }
+  if (type && VNode.$$typeof === REACT_ELEMENT) {
     dom = document.createElement(type);
   }
   // 处理子元素
@@ -70,6 +60,30 @@ function createDOM(VNode) {
   // 处理属性值
   setPropsForDOM(dom, props);
   return dom;
+}
+
+// 挂载
+function mount(VNode, containerDom) {
+  let newDOM = createDOM(VNode);
+  newDOM && containerDom.appendChild(newDOM);
+}
+
+// 挂载
+function mountArray(children, parent) {
+  if (!Array.isArray(children)) return;
+  children.forEach(child => {
+    if (typeof child === 'string') {
+      parent.appendChild(document.createTextNode(child));
+    } else {
+      mount(child, parent);
+    }
+  });
+}
+
+function render(VNode, containerDom) {
+  // 1. 虚拟DOM转化为真实DOM
+  // 2. 真实DOM挂载到containerDom
+  mount(VNode, containerDom);
 }
 
 const ReactDom = {
