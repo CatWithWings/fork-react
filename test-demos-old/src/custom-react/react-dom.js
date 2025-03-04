@@ -26,7 +26,14 @@ function getDomByFunctionComponent(VNode) {
   const { type, props } = VNode;
   const renderVNode = type(props);
   if(!renderVNode) return null;
-  console.log('renderVNode --->', renderVNode);
+  return createDOM(renderVNode);
+}
+
+function getDomByClassComponent(VNode) {
+  const { type, props } = VNode;
+  const instance = new type(props);
+  let renderVNode = instance.render();
+  if(!renderVNode) return null;
   return createDOM(renderVNode);
 }
 
@@ -35,6 +42,11 @@ function createDOM(VNode) {
   const { type, props } = VNode;
   // 创建元素
   let dom;
+
+  // 处理类组件
+  if(typeof type === 'function' && VNode.$$typeof === REACT_ELEMENT && type.IS_CLASS_COMPONENT) {
+    return getDomByClassComponent(VNode);
+  }
 
   // 处理函数型组件
   if(VNode.$$typeof === REACT_ELEMENT && typeof type === 'function') {

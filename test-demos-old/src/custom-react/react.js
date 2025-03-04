@@ -1,4 +1,5 @@
 import { REACT_ELEMENT } from './utils';
+import { Component } from './Component';
 
 function createElement(type, properties, children) {
   ['ref', 'key', '__self', '__source'].forEach((key) => {
@@ -25,5 +26,6 @@ function createElement(type, properties, children) {
 
 const React = {
   createElement,
+  Component,
 }
 export default React;

@@ -4,7 +4,7 @@
 ## 课堂笔记
 
 ### React Element
-由babel解析jsx语法，去递归的调用createElement，最终得到一个VNode
+由babel解析jsx语法，转译为createElement的调用，最终得到一个VNode
 ```javascript
 // jSX 语法
 const element = (
@@ -14,6 +14,7 @@ const element = (
     Other Text
   </div>
 );
+ReactDOM.render(element, document.getElementById('root'));
 
 // 转译后
 const element = React.createElement("div", {
@@ -25,10 +26,12 @@ const element = React.createElement("div", {
 }, "Simple React", React.createElement("p", {
   className: "sub-wrapper"
 }, "sub child"), "Other Text");
+
+ReactDOM.render(element, document.getElementById('root'));
 ```
 
 ### React Function Component
-由babel解析jsx语法，去调用转译后的MyFunctionComponent，最终返回一个React.createElement函数，需要在createDOM中手动调用才能得到真正需要的VNode
+由babel解析jsx语法，转译为一个返回值是React.createElement执行结果的函数，需要在createDOM中手动调用才能得到真正需要的VNode
 ```javascript
 // 函数组件
 function MyFunctionComponent(props) {
@@ -38,10 +41,37 @@ function MyFunctionComponent(props) {
     </div>
   );
 }
+ReactDOM.render(<MyFunctionComponent xx="child" />, document.getElementById('root'));
+
 // 转译后
 function MyFunctionComponent(props) {
   return /*#__PURE__*/React.createElement("div", {
     className: "my-component-wrapper"
   }, "MyFunctionComponent");
 }
+
+ReactDOM.render(React.createElement(MyFunctionComponent, { xx: 'child' }), document.getElementById('root'));
+```
+###  React Class Component
+由babel解析jsx语法，转译为一个继承自React.Component的类，需要在createDOM中手动调用才能得到真正需要的VNode
+```javascript
+// 类组件
+class MyClassComponent extends React.Component {
+  render() {
+    return (
+      <div>123</div>
+    )
+  }
+}
+ReactDOM.render(<MyClassComponent xx="child" />, document.getElementById('root'));
+
+// 转译后
+class MyClassComponent extends React.Component {
+  render() {
+    return /*#__PURE__*/React.createElement("div", null, "123");
+  }
+}
+ReactDOM.render(/*#__PURE__*/React.createElement(MyClassComponent, {
+  xx: "child"
+}), document.getElementById('root'));
 ```

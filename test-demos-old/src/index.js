@@ -3,6 +3,7 @@
 import React from './custom-react/react';
 import ReactDOM from './custom-react/react-dom';
 import MyFunctionComponent from './my-function-component';
+import MyClassComponent from './my-class-component';
 import './index.css';
 
 // const element = (
@@ -15,4 +16,4 @@ import './index.css';
 // console.log('VNode --->', element);
 // ReactDOM.render(element, document.getElementById('root'));
 
-ReactDOM.render(<MyFunctionComponent />, document.getElementById('root'));
+ReactDOM.render(<MyClassComponent xx="child1" />, document.getElementById('root'));
