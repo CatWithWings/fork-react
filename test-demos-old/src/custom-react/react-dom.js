@@ -33,6 +33,9 @@ function getDomByClassComponent(VNode) {
   const { type, props } = VNode;
   const instance = new type(props);
   let renderVNode = instance.render();
+
+  // 组件实例保存老的虚拟DOM(初始化时就是renderVNode)
+  instance.oldVNode = renderVNode;
   if(!renderVNode) return null;
   return createDOM(renderVNode);
 }
@@ -64,13 +67,18 @@ function createDOM(VNode) {
       // 数组
       mountArray(props.children, dom);
     } else {
+      // 数字/布尔值都会转换为字符串
+      const _children = typeof props.children !== 'string' ? String(props.children) : props.children;
       // 字符串
-      dom.appendChild(document.createTextNode(props.children));
+      dom.appendChild(document.createTextNode(_children));
     }
   }
 
   // 处理属性值
   setPropsForDOM(dom, props);
+
+  // 保存真实dom对象
+  VNode.dom = dom;
   return dom;
 }
 
@@ -84,8 +92,10 @@ function mount(VNode, containerDom) {
 function mountArray(children, parent) {
   if (!Array.isArray(children)) return;
   children.forEach(child => {
-    if (typeof child === 'string') {
-      parent.appendChild(document.createTextNode(child));
+    if (typeof child === 'string' || typeof child === 'number' ||  typeof child === 'boolean') {
+      // 数字/布尔值都会转换为字符串
+      const _child = typeof child !== 'string' ? String(child) : child;
+      parent.appendChild(document.createTextNode(_child));
     } else {
       mount(child, parent);
     }
@@ -96,6 +106,17 @@ function render(VNode, containerDom) {
   // 1. 虚拟DOM转化为真实DOM
   // 2. 真实DOM挂载到containerDom
   mount(VNode, containerDom);
+}
+
+export function findDomByVNode(VNode) {
+  if (!VNode) return;
+  if(VNode.dom) return VNode.dom;
+}
+
+export function updateDomTree(oldDom, newVNode) {
+  let parentNode = oldDom.parentNode;
+  parentNode.removeChild(oldDom);
+  parentNode.appendChild(createDOM(newVNode));
 }
 
 const ReactDom = {
