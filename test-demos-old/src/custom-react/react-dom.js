@@ -7,7 +7,8 @@ function setPropsForDOM(dom, VNodeProps = {}) {
     if (key === 'children') continue;
 
     if (/^on[A_Z].*/.test(key)) {
-      // TODO：事件处理
+      // 件处理
+      addEevent(dom, key.toLowerCase(), VNodeProps[key])
     } else if (key === 'style') {
       // style样式
       Object.keys(VNodeProps[key]).forEach((styleName) => {
@@ -55,6 +56,8 @@ function createDOM(VNode) {
   if(VNode.$$typeof === REACT_ELEMENT && typeof type === 'function') {
     return getDomByFunctionComponent(VNode);
   }
+
+  // React Element
   if (type && VNode.$$typeof === REACT_ELEMENT) {
     dom = document.createElement(type);
   }

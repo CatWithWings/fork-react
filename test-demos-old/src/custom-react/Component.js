@@ -1,6 +1,6 @@
 import { findDomByVNode, updateDomTree } from './react-dom';
 
-export let updateQueue = {
+export let updaterQueue = {
   isBatch: false,
   // 存储各个组件实例的更新器实例
   updaters: new Set(),
@@ -8,11 +8,11 @@ export let updateQueue = {
 
 // 清空更新队列
 export function flushUpdateQueue() {
-  updateQueue.isBatch  = false;
-  updateQueue.updaters.forEach((updater) => {
+  updaterQueue.isBatch  = false;
+  for (let updater of updaterQueue.updaters) {
     updater.launchUpdate();
-  });
-  updateQueue.updaters.clear();
+  }
+  updaterQueue.updaters.clear();
 }
 
 // 更新器
@@ -30,9 +30,9 @@ class Updater {
 
   // 预处理更新
   preHandleUpdate() {
-    if (updateQueue.isBatch) {
+    if (updaterQueue.isBatch) {
       // 批量更新
-      updateQueue.updaters.add(this);
+      updaterQueue.updaters.add(this);
     } else {
       // 立即更新
       this.launchUpdate();
@@ -57,6 +57,7 @@ class Updater {
 export class Component {
   static IS_CLASS_COMPONENT = true
   constructor(props) {
+    // 每个组件对应自己的updater实例
     this.updater = new Updater(this);
     this.state = {};
     this.props = props;
@@ -66,7 +67,9 @@ export class Component {
     if (!partialState) return;
     // 合并属性
     if (typeof partialState === 'function') {
-      // 传入的回调
+      // 传入的回调(我的实现)
+      const currentState = this.state;
+      this.updater.addState(partialState(currentState));
     } else {
       // 传入的是对象
       this.updater.addState(partialState);
