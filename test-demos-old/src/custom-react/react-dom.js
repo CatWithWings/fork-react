@@ -1,14 +1,16 @@
 import { REACT_ELEMENT } from './utils';
+import { addEvent } from './event';
 
 // 设置属性值
 function setPropsForDOM(dom, VNodeProps = {}) {
   if (!dom) return;
   for (let key in VNodeProps) {
     if (key === 'children') continue;
-
-    if (/^on[A_Z].*/.test(key)) {
+    console.log('key --->', key);
+    console.log('key01 --->', /^on[A_Z].*/.test(key));
+    if (/^on[A-Z].*/.test(key)) {
       // 件处理
-      addEevent(dom, key.toLowerCase(), VNodeProps[key])
+      addEvent(dom, key.toLowerCase(), VNodeProps[key])
     } else if (key === 'style') {
       // style样式
       Object.keys(VNodeProps[key]).forEach((styleName) => {
