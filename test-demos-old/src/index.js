@@ -15,5 +15,4 @@ import './index.css';
 // );
 // console.log('VNode --->', element);
 // ReactDOM.render(element, document.getElementById('root'));
-
 ReactDOM.render(<MyClassComponent xx="child1" />, document.getElementById('root'));

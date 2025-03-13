@@ -57,7 +57,7 @@ function dispatchEvent(nativeEvent) {
 export function addEvent(dom, eventName, bindFunction) {
   dom.attch = dom.attch || {};
   dom.attch[eventName] = bindFunction;
-  if (dom[eventName]) return;
+  if (document[eventName]) return;
 
   // 事件合成机制的核心点一：老版本的React是直接将事件绑定到document上
   // 所以合成事件内部的阻止冒泡函数是无法阻止原生事件的，此时它的触发是冒泡至document元素后派发事件

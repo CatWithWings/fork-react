@@ -6,8 +6,6 @@ function setPropsForDOM(dom, VNodeProps = {}) {
   if (!dom) return;
   for (let key in VNodeProps) {
     if (key === 'children') continue;
-    console.log('key --->', key);
-    console.log('key01 --->', /^on[A_Z].*/.test(key));
     if (/^on[A-Z].*/.test(key)) {
       // 件处理
       addEvent(dom, key.toLowerCase(), VNodeProps[key])
@@ -33,19 +31,20 @@ function getDomByFunctionComponent(VNode) {
 }
 
 function getDomByClassComponent(VNode) {
-  const { type, props } = VNode;
+  const { type, props, ref } = VNode;
   const instance = new type(props);
   let renderVNode = instance.render();
 
   // 组件实例保存老的虚拟DOM(初始化时就是renderVNode)
   instance.oldVNode = renderVNode;
+  ref && (ref.current = instance);
   if(!renderVNode) return null;
   return createDOM(renderVNode);
 }
 
 // 创建真实DOM
 function createDOM(VNode) {
-  const { type, props } = VNode;
+  const { type, props, ref } = VNode;
   // 创建元素
   let dom;
 
@@ -84,6 +83,8 @@ function createDOM(VNode) {
 
   // 保存真实dom对象
   VNode.dom = dom;
+  // 处理ref
+  ref && (ref.current = dom);
   return dom;
 }
 

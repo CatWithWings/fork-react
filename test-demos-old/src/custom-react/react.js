@@ -2,12 +2,13 @@ import { REACT_ELEMENT } from './utils';
 import { Component } from './Component';
 
 function createElement(type, properties, children) {
-  ['ref', 'key', '__self', '__source'].forEach((key) => {
-    delete properties[key];
-  });
   const props = properties || {};
   const ref = properties.ref || null;
   const key = properties.key || null;
+
+  ['ref', 'key', '__self', '__source'].forEach((key) => {
+    delete properties[key];
+  });
 
   if (arguments.length > 3) {
     props.children = [...arguments].slice(2);
@@ -24,8 +25,15 @@ function createElement(type, properties, children) {
   }
 }
 
+function createRef() {
+  return {
+    current: null,
+  };
+}
+
 const React = {
   createElement,
   Component,
+  createRef,
 }
 export default React;
