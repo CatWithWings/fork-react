@@ -1,0 +1,1 @@
+const REACT_ELEMEMT_TYPE = Symbol.for('react.element');
