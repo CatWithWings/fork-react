@@ -1,10 +1,7 @@
 import React from 'react';
 function App() {
-  return (
-    <div className="App">
-      Simple React
-    </div>
-  );
+  const fallback = <div>123</div>
+  return fallback;
 }
 
 export default App;

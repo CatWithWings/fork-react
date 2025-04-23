@@ -34,6 +34,8 @@ function getDomByClassComponent(VNode) {
   const { type, props, ref } = VNode;
   const instance = new type(props);
   let renderVNode = instance.render();
+  
+  console.log('VNode 2-->', renderVNode);
 
   // 组件实例保存老的虚拟DOM(初始化时就是renderVNode)
   instance.oldVNode = renderVNode;
@@ -109,6 +111,7 @@ function mountArray(children, parent) {
 }
 
 function render(VNode, containerDom) {
+  console.log('VNode -->', VNode);
   // 1. 虚拟DOM转化为真实DOM
   // 2. 真实DOM挂载到containerDom
   mount(VNode, containerDom);

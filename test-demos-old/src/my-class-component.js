@@ -25,19 +25,29 @@ export default class MyClassComponent extends React.Component {
     this.childClassRef.current?.someHandle?.();
   }
 
+  // render() {
+  //   const { count } = this.state;
+  //   return (
+  //     <div>
+  //       <h1 ref={this.headerRef} style={{ color: 'orange' }}>Class Component</h1>
+  //       <span>props: {this.props.xx}</span>
+  //       <div
+  //         style={{ cursor: 'pointer' }}
+  //         onClick={() => this.handleClick()}
+  //       >
+  //         Click Me {count}
+  //       </div>
+  //       <MyChildClassComponent ref={this.childClassRef} />
+  //     </div>
+  //   );
+  // };
+  
   render() {
     const { count } = this.state;
     return (
       <div>
-        <h1 ref={this.headerRef} style={{ color: 'orange' }}>Class Component</h1>
-        <span>props: {this.props.xx}</span>
-        <div
-          style={{ cursor: 'pointer' }} 
-          onClick={() => this.handleClick()}
-        >
-          Click Me {count}
-        </div>
-        <MyChildClassComponent ref={this.childClassRef} />
+        <h1 ref={this.headerRef} style={{ color: 'orange' }}>DIV</h1>
+        <div>SPAN</div>
       </div>
     );
   };
