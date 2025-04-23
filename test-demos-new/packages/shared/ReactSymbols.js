@@ -1,1 +1,3 @@
-const REACT_ELEMEMT_TYPE = Symbol.for('react.element');
+const REACT_ELEMENT_TYPE = Symbol.for('react.element');
+
+export { REACT_ELEMENT_TYPE };
